@@ -10,27 +10,39 @@ ans = " ".join(ans.split()) # Remove duped spaces
 
 regexAns = "" # Final regex-ed answer
 
-addSpaceFromRegex = False
-addSpaceFromOther = False
+# Edgy edgecase is edgy
+addedSpace = False
 
-for char in ans:    
+for char in ans:
+    
+    
+    # Prevent double space regex in case of 
+    if(char == " " and addedSpace):
+        continue
     
     add = char
     
-    # Prevent these characters from being used as REGEX or if they can have space around them
-    addSpaceFromRegex = char in antiRegexSquad
-    addSpaceFromOther = char in spaceIndependent
-    
-    if(addSpaceFromRegex):
+    # Character is mistaken REGEX or can have space around it
+    if(char in antiRegexSquad):
         if(char == "."): # If it is a period, chances are we don't want to add space around it.
-            cur = "\\" + char
+            add = "\\" + char
         else:
-            add = "[\s]*\\" + char
-    elif(addSpaceFromOther):
-        add = "[\s]*" + char
+            add = "\\" + char + "[\s]*"
+            if(not addedSpace):
+                add = "[\s]*" + add
+            addedSpace = True
+    elif(char in spaceIndependent):
+        add = char + "[\s]*"
+        if(not addedSpace):
+                add = "[\s]*" + add
+        addedSpace = True
+    else:
+        addedSpace = False
     
     regexAns += add
-  
-print("\nRegex Answer: \t", regexAns)
 
-# -Double [\s]* when whitespace succeeds )
+# Extra spicy edgecase
+if(regexAns[-5:] == "[\s]*"):
+    regexAns = regexAns[:-5]
+
+print("\nREGEX Answer: \t", regexAns)
