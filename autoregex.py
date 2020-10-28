@@ -1,6 +1,7 @@
-ans = input("Answer: ")
+ans = input("Answer: \t")
 
 antiRegexSquad = ["$","^","*","+","|",".","?","(",")","[","]","{","}"]
+spaceIndependent = ["-","/","\"","\'","=","<",">"]
 
 
 
@@ -9,31 +10,27 @@ ans = " ".join(ans.split()) # Remove duped spaces
 
 regexAns = "" # Final regex-ed answer
 
-lastChar = ""
+addSpaceFromRegex = False
+addSpaceFromOther = False
 
-for x in ans:
+for char in ans:    
     
-    cur = x
+    add = char
     
-    # Prevent these characters from being used as REGEX
-    if(x in antiRegexSquad):
-        if(x == ".")
-            cur = "\\" + x
+    # Prevent these characters from being used as REGEX or if they can have space around them
+    addSpaceFromRegex = char in antiRegexSquad
+    addSpaceFromOther = char in spaceIndependent
+    
+    if(addSpaceFromRegex):
+        if(char == "."): # If it is a period, chances are we don't want to add space around it.
+            cur = "\\" + char
         else:
-            cur = "[\s]*\\" + x + "[\s]*"
-  
-    if(lastChar == " "):
-        regexAns += "[\s]*"
-        
-    lastChar = x
+            add = "[\s]*\\" + char
+    elif(addSpaceFromOther):
+        add = "[\s]*" + char
     
-    if(lastChar == " "):
-        continue
-    
-    regexAns += cur
+    regexAns += add
   
-print("Regex Answer: ", regexAns)
+print("\nRegex Answer: \t", regexAns)
 
-## Issues ##
 # -Double [\s]* when whitespace succeeds )
-# -Doesn't account for " or ' (Split into groups maybe?)
