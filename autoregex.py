@@ -26,6 +26,8 @@ for char in ans:
     if(char in antiRegexSquad):
         if(char == "."): # If it is a period, chances are we don't want to add space around it.
             add = "\\" + char
+            if(addedSpace): # Just a hack, need to fix later
+                regexAns = regexAns[:-5]
         else:
             add = "\\" + char + "[\s]*"
             if(not addedSpace):
